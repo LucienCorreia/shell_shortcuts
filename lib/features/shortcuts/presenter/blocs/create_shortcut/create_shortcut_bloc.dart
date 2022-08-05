@@ -1,0 +1,114 @@
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../../../domain/entities/shortcut_entity.dart';
+import '../../../domain/use_cases/create_shortcut_use_case.dart';
+import '../../../domain/use_cases/parse_string_to_commands_use_case.dart';
+import 'create_shortcut_events.dart';
+import 'create_shortcut_states.dart';
+
+class CreateShortcutBloc
+    extends Bloc<CreateShortcutEvent, CreateShortcutState> {
+  final CreateShortcutUseCase _createShortcutUseCase;
+  final ParseStringToCommandsUseCase _parseStringToCommandsUseCase;
+
+  ShortcutEntity _shortcut = const ShortcutEntity(
+    id: -1,
+    name: '',
+    commands: [],
+  );
+
+  String commands = '';
+
+  CreateShortcutBloc({
+    required CreateShortcutUseCase createShortcutUseCase,
+    required ParseStringToCommandsUseCase parseStringToCommandsUseCase,
+  })  : _createShortcutUseCase = createShortcutUseCase,
+        _parseStringToCommandsUseCase = parseStringToCommandsUseCase,
+        super(const CreateShortcutInitial()) {
+    on<UpdateShortcutProperties>(
+      (event, emit) => _updateProperties(
+        event,
+        emit,
+      ),
+    );
+    on<SaveShortcut>(
+      (event, emit) => _saveShortcut(
+        event,
+        emit,
+      ),
+    );
+    on<ResetShortcutProperties>(
+      (event, emit) => _resetProperties(
+        event,
+        emit,
+      ),
+    );
+  }
+
+  Future<void> _updateProperties(
+    UpdateShortcutProperties event,
+    Emitter emit,
+  ) async {
+    _shortcut = _shortcut.copyWith(
+      name: event.name,
+      commands: _parseStringToCommandsUseCase(event.commands ?? ''),
+    );
+
+    emit(
+      CreateShortcutImcomplete(
+        name: event.name,
+        commands: event.commands,
+      ),
+    );
+  }
+
+  Future<void> _saveShortcut(
+    SaveShortcut event,
+    Emitter emit,
+  ) async {
+    try {
+      if (_shortcut.name.isEmpty) {
+        emit(
+          const InvalidShortcutName(),
+        );
+        return;
+      }
+
+      if (_shortcut.commands.isEmpty) {
+        emit(
+          const InvalidShortcutCommands(),
+        );
+        return;
+      }
+
+      _shortcut = await _createShortcutUseCase(_shortcut);
+
+      emit(
+        CreateShortcutComplete(
+          name: _shortcut.name,
+          commands: _shortcut.commands.join(' '),
+        ),
+      );
+    } catch (e) {
+      emit(
+        CreateShortcutFailure(
+          e.toString(),
+        ),
+      );
+    }
+  }
+
+  void _resetProperties(ResetShortcutProperties event, Emitter emit) {
+    _shortcut = _shortcut.copyWith(
+      name: '',
+      commands: [],
+    );
+
+    emit(
+      CreateShortcutImcomplete(
+        name: _shortcut.name,
+        commands: _shortcut.commands.join(' '),
+      ),
+    );
+  }
+}
