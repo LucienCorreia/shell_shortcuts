@@ -96,6 +96,29 @@ class _CreateShortcutPageState extends State<CreateShortcutPage> {
                     },
                   ),
                   TextFormField(
+                    decoration: const InputDecoration(
+                      alignLabelWithHint: true,
+                      labelText: 'Working Directory',
+                    ),
+                    initialValue: (state is CreateShortcutInitial)
+                        ? ''
+                        : (state is CreateShortcutImcomplete)
+                            ? state.workingDirectory
+                            : '',
+                    onChanged: (value) {
+                      _createShortcutBloc.add(
+                        UpdateShortcutProperties(workingDirectory: value),
+                      );
+                    },
+                    validator: (value) {
+                      if (state is InvalidShortcutName) {
+                        return state.message;
+                      }
+
+                      return '';
+                    },
+                  ),
+                  TextFormField(
                     minLines: 3,
                     maxLines: 999,
                     expands: false,
