@@ -9,20 +9,24 @@ class CreateShortcutInitial extends CreateShortcutState {
 class CreateShortcutImcomplete extends CreateShortcutState {
   final String? name;
   final String? commands;
+  final String? workingDirectory;
 
   const CreateShortcutImcomplete({
     this.name,
     this.commands,
+    this.workingDirectory,
   });
 }
 
 class CreateShortcutComplete extends CreateShortcutState {
   final String name;
   final String commands;
+  final String? workingDirectory;
 
   const CreateShortcutComplete({
     required this.name,
     required this.commands,
+    this.workingDirectory,
   });
 }
 

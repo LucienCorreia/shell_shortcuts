@@ -13,6 +13,8 @@ abstract class _$ShortcutEntityCWProxy {
 
   ShortcutEntity name(String name);
 
+  ShortcutEntity workingDirectory(String workingDirectory);
+
   /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `ShortcutEntity(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
   ///
   /// Usage
@@ -23,6 +25,7 @@ abstract class _$ShortcutEntityCWProxy {
     List<CommandEntity>? commands,
     int? id,
     String? name,
+    String? workingDirectory,
   });
 }
 
@@ -43,6 +46,10 @@ class _$ShortcutEntityCWProxyImpl implements _$ShortcutEntityCWProxy {
   ShortcutEntity name(String name) => this(name: name);
 
   @override
+  ShortcutEntity workingDirectory(String workingDirectory) =>
+      this(workingDirectory: workingDirectory);
+
+  @override
 
   /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `ShortcutEntity(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
   ///
@@ -54,6 +61,7 @@ class _$ShortcutEntityCWProxyImpl implements _$ShortcutEntityCWProxy {
     Object? commands = const $CopyWithPlaceholder(),
     Object? id = const $CopyWithPlaceholder(),
     Object? name = const $CopyWithPlaceholder(),
+    Object? workingDirectory = const $CopyWithPlaceholder(),
   }) {
     return ShortcutEntity(
       commands: commands == const $CopyWithPlaceholder() || commands == null
@@ -68,12 +76,18 @@ class _$ShortcutEntityCWProxyImpl implements _$ShortcutEntityCWProxy {
           ? _value.name
           // ignore: cast_nullable_to_non_nullable
           : name as String,
+      workingDirectory: workingDirectory == const $CopyWithPlaceholder() ||
+              workingDirectory == null
+          ? _value.workingDirectory
+          // ignore: cast_nullable_to_non_nullable
+          : workingDirectory as String,
     );
   }
 }
 
 extension $ShortcutEntityCopyWith on ShortcutEntity {
   /// Returns a callable class that can be used as follows: `instanceOfShortcutEntity.copyWith(...)` or like so:`instanceOfShortcutEntity.copyWith.fieldName(...)`.
+  // ignore: library_private_types_in_public_api
   _$ShortcutEntityCWProxy get copyWith => _$ShortcutEntityCWProxyImpl(this);
 }
 
@@ -95,19 +109,22 @@ class ShortcutEntityAdapter extends TypeAdapter<ShortcutEntity> {
       id: fields[0] as int,
       name: fields[1] as String,
       commands: (fields[2] as List).cast<CommandEntity>(),
+      workingDirectory: fields[3] as String,
     );
   }
 
   @override
   void write(BinaryWriter writer, ShortcutEntity obj) {
     writer
-      ..writeByte(3)
+      ..writeByte(4)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
       ..write(obj.name)
       ..writeByte(2)
-      ..write(obj.commands);
+      ..write(obj.commands)
+      ..writeByte(3)
+      ..write(obj.workingDirectory);
   }
 
   @override

@@ -12,6 +12,7 @@ class RunCommandUseCase {
         final process = await Process.start(
           command.command,
           command.arguments,
+          workingDirectory: shortcut.workingDirectory,
           runInShell: true,
         );
         final stdout = process.stdout;

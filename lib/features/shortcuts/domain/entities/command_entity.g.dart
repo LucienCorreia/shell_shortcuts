@@ -73,6 +73,7 @@ class _$CommandEntityCWProxyImpl implements _$CommandEntityCWProxy {
 
 extension $CommandEntityCopyWith on CommandEntity {
   /// Returns a callable class that can be used as follows: `instanceOfCommandEntity.copyWith(...)` or like so:`instanceOfCommandEntity.copyWith.fieldName(...)`.
+  // ignore: library_private_types_in_public_api
   _$CommandEntityCWProxy get copyWith => _$CommandEntityCWProxyImpl(this);
 }
 

@@ -15,6 +15,7 @@ class CreateShortcutBloc
     id: -1,
     name: '',
     commands: [],
+    workingDirectory: '',
   );
 
   String commands = '';
@@ -52,12 +53,14 @@ class CreateShortcutBloc
     _shortcut = _shortcut.copyWith(
       name: event.name,
       commands: _parseStringToCommandsUseCase(event.commands ?? ''),
+      workingDirectory: event.workingDirectory,
     );
 
     emit(
       CreateShortcutImcomplete(
         name: event.name,
         commands: event.commands,
+        workingDirectory: event.workingDirectory,
       ),
     );
   }
@@ -87,6 +90,7 @@ class CreateShortcutBloc
         CreateShortcutComplete(
           name: _shortcut.name,
           commands: _shortcut.commands.join(' '),
+          workingDirectory: _shortcut.workingDirectory,
         ),
       );
     } catch (e) {
@@ -102,12 +106,14 @@ class CreateShortcutBloc
     _shortcut = _shortcut.copyWith(
       name: '',
       commands: [],
+      workingDirectory: '',
     );
 
     emit(
       CreateShortcutImcomplete(
         name: _shortcut.name,
         commands: _shortcut.commands.join(' '),
+        workingDirectory: _shortcut.workingDirectory,
       ),
     );
   }

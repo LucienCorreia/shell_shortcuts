@@ -18,10 +18,14 @@ class ShortcutEntity extends Equatable {
   @HiveField(2)
   final List<CommandEntity> commands;
 
+  @HiveField(3)
+  final String workingDirectory;
+
   const ShortcutEntity({
     required this.id,
     required this.name,
     required this.commands,
+    required this.workingDirectory,
   });
 
   @override
@@ -29,6 +33,7 @@ class ShortcutEntity extends Equatable {
         id,
         name,
         commands,
+        workingDirectory,
       ];
 
   String get nameWithCommands => '$name: ${commands.map((x) => x.commandWithArguments).join('\n')}';

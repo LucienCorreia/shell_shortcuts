@@ -6,6 +6,7 @@ class ShortcutModel extends ShortcutEntity {
     required super.id,
     required super.name,
     required super.commands,
+    required super.workingDirectory,
   });
 
   factory ShortcutModel.fromJson(Map<String, dynamic> json) {
@@ -15,6 +16,7 @@ class ShortcutModel extends ShortcutEntity {
       commands: List<CommandModel>.from(
         json['commands']?.map((x) => CommandModel.fromJson(x)) ?? [],
       ),
+      workingDirectory: '',
     );
   }
 
@@ -23,6 +25,7 @@ class ShortcutModel extends ShortcutEntity {
       'id': id,
       'name': name,
       'commands': List<CommandModel>.from(commands.map((x) => CommandModel.fromEntity(x).toJson())),
+      'workingDirectory': workingDirectory,
     };
   }
 }
