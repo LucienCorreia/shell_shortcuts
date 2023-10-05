@@ -30,8 +30,10 @@ class RunCommandUseCase {
           onData('\n$stdoutString\n');
         }
 
-        if (stderrString.isNotEmpty) {
+        if (stderrString.isNotEmpty && await process.exitCode != 0) {
           onError('\n$stderrString\n');
+        } else {
+          onData('\n$stderrString\n');
         }
       } catch (e) {
         onError('\n$e\n');
