@@ -6,17 +6,17 @@ import 'features/shortcuts/shortcuts_module.dart';
 
 class AppModule extends Module {
   @override
-  List<Bind> get binds => [
-        Bind.singleton<Box<ShortcutEntity>>(
-          (i) => Hive.box<ShortcutEntity>('shortcuts'),
-        ),
-      ];
+  void binds(i) {
+        i.addSingleton<Box<ShortcutEntity>>(
+          () => Hive.box<ShortcutEntity>('shortcuts'),
+        );
+  }
 
   @override
-  List<ModularRoute> get routes => [
-        ModuleRoute(
+  void routes(r) {
+        r.module(
           '/shortcuts',
           module: ShortcutsModule(),
-        ),
-      ];
+        );
+  }
 }

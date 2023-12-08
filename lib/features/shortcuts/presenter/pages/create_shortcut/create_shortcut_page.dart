@@ -9,10 +9,7 @@ import '../../blocs/list_shortcuts/list_shortcuts_bloc.dart';
 import '../../blocs/list_shortcuts/list_shortcuts_events.dart';
 
 class CreateShortcutPage extends StatefulWidget {
-  const CreateShortcutPage({Key? key})
-      : super(
-          key: key,
-        );
+  const CreateShortcutPage({super.key});
 
   @override
   State<CreateShortcutPage> createState() => _CreateShortcutPageState();
@@ -58,9 +55,9 @@ class _CreateShortcutPageState extends State<CreateShortcutPage> {
             ).then((_) {
               Modular.to.pop();
             });
-            return Center(
+            return const Center(
               child: Column(
-                children: const [
+                children: [
                   Text('Shortcut created, return to listing...'),
                   CircularProgressIndicator(),
                 ],
@@ -89,6 +86,44 @@ class _CreateShortcutPageState extends State<CreateShortcutPage> {
                     },
                     validator: (value) {
                       if (state is InvalidShortcutName) {
+                        return state.message;
+                      }
+
+                      return '';
+                    },
+                  ),
+                  TextFormField(
+                    decoration: const InputDecoration(
+                      alignLabelWithHint: true,
+                      labelText: 'Working Directory',
+                    ),
+                    maxLines: null,
+                    onChanged: (value) {
+                      _createShortcutBloc.add(
+                        UpdateShortcutProperties(workingDirectory: value),
+                      );
+                    },
+                    validator: (value) {
+                      if (state is InvalidShortcutWorkingDirectory) {
+                        return state.message;
+                      }
+
+                      return '';
+                    },
+                  ),
+                  TextFormField(
+                    decoration: const InputDecoration(
+                      alignLabelWithHint: true,
+                      labelText: 'Environment Variables',
+                    ),
+                    maxLines: null,
+                    onChanged: (value) {
+                      _createShortcutBloc.add(
+                        UpdateShortcutProperties(environment: value),
+                      );
+                    },
+                    validator: (value) {
+                      if (state is InvalidShortcutEnviromentVariables) {
                         return state.message;
                       }
 

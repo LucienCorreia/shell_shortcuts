@@ -9,7 +9,7 @@ import '../../blocs/view_shortcut/view_shortcut_bloc.dart';
 import '../../blocs/view_shortcut/view_shortcut_events.dart';
 
 class ListShortcutsPage extends StatefulWidget {
-  const ListShortcutsPage({Key? key}) : super(key: key);
+  const ListShortcutsPage({super.key});
 
   @override
   State<ListShortcutsPage> createState() => _ListShortcutsPageState();

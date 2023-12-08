@@ -1,11 +1,15 @@
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:hive/hive.dart';
 
+import 'domain/entities/shortcut_entity.dart';
 import 'domain/repositories/shortcuts_repository.dart';
 import 'domain/use_cases/create_shortcut_use_case.dart';
 import 'domain/use_cases/list_all_shurtcuts_use_case.dart';
 import 'domain/use_cases/parse_string_to_commands_use_case.dart';
+import 'domain/use_cases/parse_string_to_environment_variables_use_case.dart';
 import 'domain/use_cases/remove_shortcut_use_case.dart';
 import 'domain/use_cases/run_command_use_case.dart';
+import 'domain/use_cases/valid_working_directory_use_case.dart';
 import 'external/data_sources/local_shortcuts_data_source.dart';
 import 'infra/data_sources/local_shortcuts_data_source.dart';
 import 'infra/repositories/shortcuts_repository.dart';
@@ -18,70 +22,78 @@ import 'presenter/pages/view_shortcut/view_shortcut_page.dart';
 
 class ShortcutsModule extends Module {
   @override
-  List<Bind> get binds => [
-        Bind.factory<LocalShortcutsDataSource>(
-          (i) => LocalShortcutsDataSourceImpl(
-            boxShortcut: i.get(),
+  void binds(i) {
+        i.add<LocalShortcutsDataSource>(
+          () => LocalShortcutsDataSourceImpl(
+            boxShortcut: i.get<Box<ShortcutEntity>>(),
           ),
-        ),
-        Bind.factory<ShortcutsRepository>(
-          (i) => ShortcutsRepositoryImpl(
+        );
+        i.add<ShortcutsRepository>(
+          () => ShortcutsRepositoryImpl(
             localShortcutsDataSource: i.get(),
           ),
-        ),
-        Bind.factory(
-          (i) => ListAllShurtcutsUseCase(
+        );
+        i.add(
+          () => ValidWorkingDirectoryUseCase(),
+        );
+        i.add(
+          () => ParseStringToEnvironmentVariablesUseCase(),
+        );
+        i.add(
+          () => ListAllShurtcutsUseCase(
             shortcutsRepository: i.get(),
           ),
-        ),
-        Bind.factory(
-          (i) => CreateShortcutUseCase(
+        );
+        i.add(
+          () => CreateShortcutUseCase(
             shortcutsRepository: i.get(),
           ),
-        ),
-        Bind.factory(
-          (i) => RemoveShortcutUseCase(
+        );
+        i.add(
+          () => RemoveShortcutUseCase(
             shortcutsRepository: i.get(),
           ),
-        ),
-        Bind.factory(
-          (i) => RunCommandUseCase(),
-        ),
-        Bind.factory(
-          (i) => ParseStringToCommandsUseCase(),
-        ),
-        Bind.singleton(
-          (i) => ListShortcutsBloc(
+        );
+        i.add(
+          () => RunCommandUseCase(),
+        );
+        i.add(
+          () => ParseStringToCommandsUseCase(),
+        );
+        i.addSingleton(
+          () => ListShortcutsBloc(
             listAllShurtcutsUseCase: i.get(),
             removeShortcutUseCase: i.get(),
           ),
-        ),
-        Bind.singleton(
-          (i) => CreateShortcutBloc(
+        );
+        i.addSingleton(
+          () => CreateShortcutBloc(
             createShortcutUseCase: i.get(),
             parseStringToCommandsUseCase: i.get(),
+            parseStringToEnvironmentVariablesUseCase: i.get(),
+            validWorkingDirectoryUseCase: i.get(),
           ),
-        ),
-        Bind.singleton(
-          (i) => ViewShortcutBloc(
+        );
+        i.addSingleton(
+          () => ViewShortcutBloc(
             runCommandUseCase: i.get(),
           ),
-        ),
-      ];
+        );
+    }
 
   @override
-  List<ModularRoute> get routes => [
-        ChildRoute(
+  void routes(r) {
+        r.child(
           '/',
-          child: (_, __) => const ListShortcutsPage(),
-        ),
-        ChildRoute(
+          child: (_) => const ListShortcutsPage(),
+        );
+        r.child(
           '/create/',
-          child: (_, __) => const CreateShortcutPage(),
-        ),
-        ChildRoute(
+          child: (_) => const CreateShortcutPage(),
+        );
+        r.child(
           '/view/',
-          child: (_, __) => const ViewShortcutPage(),
-        ),
-      ];
+          child: (_) => const ViewShortcutPage(),
+        );
+    }
 }

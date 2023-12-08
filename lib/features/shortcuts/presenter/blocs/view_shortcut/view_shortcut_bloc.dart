@@ -18,7 +18,10 @@ class ViewShortcutBloc extends Bloc<ViewShortcutEvent, ViewShortcutState> {
           const NoShortcut(),
         ) {
     on<RunCommand>(
-      (event, emit) async => await _runCommand(event, emit),
+      (event, emit) => _runCommand(event, emit),
+    );
+    on<UpdateStdout>(
+      (event, emit) => _updateStdout(event, emit),
     );
     on<SetShortcut>(
       (event, emit) => _setShortcut(event, emit),
@@ -28,35 +31,50 @@ class ViewShortcutBloc extends Bloc<ViewShortcutEvent, ViewShortcutState> {
     );
   }
 
-  Future<void> _runCommand(
-      RunCommand event, Emitter<ViewShortcutState> emit) async {
-    await _runCommandUseCase(
-      _shortcut!,
-      (data) {
-        _stdout.add(data);
-        emit(FinishedShortcut(_shortcut!, _stdout));
-      },
-      (error) {
-        _stdout.add(error);
-        emit(FailedShortcut(_shortcut!, _stdout));
-      },
-      (() => emit(
-            RunningShortcut(
-              _shortcut!,
-              _stdout,
-            ),
-          )),
-    );
+  Future _runCommand(RunCommand event, Emitter<ViewShortcutState> emit) async {
+    emit(RunningShortcut(_shortcut!));
+    for (final command in _shortcut!.commands) {
+      final result = await _runCommandUseCase(
+        _shortcut!,
+        command,
+      );
+
+      result.fold(
+        (failure) {
+          _stdout.add(failure);
+          emit(
+            FailedShortcut(_shortcut!, _stdout),
+          );
+        },
+        (success) {
+          _stdout.add(success);
+          emit(
+            FinishedShortcut(_shortcut!, _stdout),
+          );
+        },
+      );
+    }
   }
 
   void _setShortcut(SetShortcut event, Emitter<ViewShortcutState> emit) {
     _shortcut = event.shortcut;
-    emit(NotExecutedShortcut(event.shortcut));
+    emit(
+      NotExecutedShortcut(event.shortcut),
+    );
   }
 
   void _clearShortcut(ClearShortcut event, Emitter<ViewShortcutState> emit) {
     _shortcut = null;
     _stdout.clear();
-    emit(const NoShortcut());
+    emit(
+      const NoShortcut(),
+    );
+  }
+
+  void _updateStdout(UpdateStdout event, Emitter<ViewShortcutState> emit) {
+    _stdout.add(event.text);
+    emit(
+      RunningShortcut(_shortcut!, _stdout),
+    );
   }
 }

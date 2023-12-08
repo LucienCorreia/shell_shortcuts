@@ -8,10 +8,8 @@ import '../../blocs/view_shortcut/view_shortcut_states.dart';
 
 class ViewShortcutPage extends StatefulWidget {
   const ViewShortcutPage({
-    Key? key,
-  }) : super(
-          key: key,
-        );
+    super.key,
+  });
 
   @override
   State<ViewShortcutPage> createState() => _ViewShortcutPageState();

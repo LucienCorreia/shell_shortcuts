@@ -9,9 +9,13 @@ part of 'shortcut_entity.dart';
 abstract class _$ShortcutEntityCWProxy {
   ShortcutEntity commands(List<CommandEntity> commands);
 
+  ShortcutEntity environment(Map<String, String>? environment);
+
   ShortcutEntity id(int id);
 
   ShortcutEntity name(String name);
+
+  ShortcutEntity workingDirectory(String? workingDirectory);
 
   /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `ShortcutEntity(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
   ///
@@ -21,8 +25,10 @@ abstract class _$ShortcutEntityCWProxy {
   /// ````
   ShortcutEntity call({
     List<CommandEntity>? commands,
+    Map<String, String>? environment,
     int? id,
     String? name,
+    String? workingDirectory,
   });
 }
 
@@ -37,10 +43,18 @@ class _$ShortcutEntityCWProxyImpl implements _$ShortcutEntityCWProxy {
       this(commands: commands);
 
   @override
+  ShortcutEntity environment(Map<String, String>? environment) =>
+      this(environment: environment);
+
+  @override
   ShortcutEntity id(int id) => this(id: id);
 
   @override
   ShortcutEntity name(String name) => this(name: name);
+
+  @override
+  ShortcutEntity workingDirectory(String? workingDirectory) =>
+      this(workingDirectory: workingDirectory);
 
   @override
 
@@ -52,14 +66,20 @@ class _$ShortcutEntityCWProxyImpl implements _$ShortcutEntityCWProxy {
   /// ````
   ShortcutEntity call({
     Object? commands = const $CopyWithPlaceholder(),
+    Object? environment = const $CopyWithPlaceholder(),
     Object? id = const $CopyWithPlaceholder(),
     Object? name = const $CopyWithPlaceholder(),
+    Object? workingDirectory = const $CopyWithPlaceholder(),
   }) {
     return ShortcutEntity(
       commands: commands == const $CopyWithPlaceholder() || commands == null
           ? _value.commands
           // ignore: cast_nullable_to_non_nullable
           : commands as List<CommandEntity>,
+      environment: environment == const $CopyWithPlaceholder()
+          ? _value.environment
+          // ignore: cast_nullable_to_non_nullable
+          : environment as Map<String, String>?,
       id: id == const $CopyWithPlaceholder() || id == null
           ? _value.id
           // ignore: cast_nullable_to_non_nullable
@@ -68,6 +88,10 @@ class _$ShortcutEntityCWProxyImpl implements _$ShortcutEntityCWProxy {
           ? _value.name
           // ignore: cast_nullable_to_non_nullable
           : name as String,
+      workingDirectory: workingDirectory == const $CopyWithPlaceholder()
+          ? _value.workingDirectory
+          // ignore: cast_nullable_to_non_nullable
+          : workingDirectory as String?,
     );
   }
 }
@@ -95,19 +119,25 @@ class ShortcutEntityAdapter extends TypeAdapter<ShortcutEntity> {
       id: fields[0] as int,
       name: fields[1] as String,
       commands: (fields[2] as List).cast<CommandEntity>(),
+      environment: (fields[3] as Map?)?.cast<String, String>(),
+      workingDirectory: fields[4] as String?,
     );
   }
 
   @override
   void write(BinaryWriter writer, ShortcutEntity obj) {
     writer
-      ..writeByte(3)
+      ..writeByte(5)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
       ..write(obj.name)
       ..writeByte(2)
-      ..write(obj.commands);
+      ..write(obj.commands)
+      ..writeByte(3)
+      ..write(obj.environment)
+      ..writeByte(4)
+      ..write(obj.workingDirectory);
   }
 
   @override
