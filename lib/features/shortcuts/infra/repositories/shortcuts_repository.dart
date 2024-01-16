@@ -15,6 +15,11 @@ class ShortcutsRepositoryImpl implements ShortcutsRepository {
   }
 
   @override
+  Future<ShortcutEntity> updateShortcut(ShortcutEntity shortcut) async {
+    return await _localShortcutsDataSource.updateShortcut(shortcut);
+  }
+
+  @override
   Future<List<ShortcutEntity>> getAllShortcuts() async {
     return await _localShortcutsDataSource.getAllShortcuts();
   }

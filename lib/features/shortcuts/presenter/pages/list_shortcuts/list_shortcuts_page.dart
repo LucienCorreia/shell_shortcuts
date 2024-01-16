@@ -5,6 +5,8 @@ import 'package:flutter_modular/flutter_modular.dart';
 import '../../blocs/list_shortcuts/list_shortcuts_bloc.dart';
 import '../../blocs/list_shortcuts/list_shortcuts_events.dart';
 import '../../blocs/list_shortcuts/list_shortcuts_states.dart';
+import '../../blocs/update_shortcut/update_shortcut_bloc.dart';
+import '../../blocs/update_shortcut/update_shortcut_events.dart';
 import '../../blocs/view_shortcut/view_shortcut_bloc.dart';
 import '../../blocs/view_shortcut/view_shortcut_events.dart';
 
@@ -17,6 +19,7 @@ class ListShortcutsPage extends StatefulWidget {
 
 class _ListShortcutsPageState extends State<ListShortcutsPage> {
   final ListShortcutsBloc _listShortcutsBloc = Modular.get();
+  final UpdateShortcutBloc _updateShortcutBloc = Modular.get();
   final ViewShortcutBloc _viewShortcutBloc = Modular.get();
 
   @override
@@ -76,6 +79,18 @@ class _ListShortcutsPageState extends State<ListShortcutsPage> {
                       icon: const Icon(
                         Icons.terminal,
                       ),
+                    ),
+                    IconButton(
+                      onPressed: () {
+                        _updateShortcutBloc.add(
+                          SetShortcutToEdit(
+                            shortcut,
+                          ),
+                        );
+
+                        Modular.to.pushNamed('/shortcuts/edit/');
+                      },
+                      icon: const Icon(Icons.edit),
                     ),
                     IconButton(
                       icon: const Icon(

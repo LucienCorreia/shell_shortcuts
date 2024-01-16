@@ -25,6 +25,16 @@ class LocalShortcutsDataSourceImpl implements LocalShortcutsDataSource {
   }
 
   @override
+  Future<ShortcutEntity> updateShortcut(ShortcutEntity shortcut) async {
+    final index = _boxShortcut.values.toList().indexWhere((element) => element.id == shortcut.id);
+
+    await _boxShortcut.deleteAt(index);
+    await _boxShortcut.add(shortcut);
+
+    return shortcut;
+  }
+
+  @override
   Future<List<ShortcutEntity>> getAllShortcuts() async {
     return _boxShortcut.values.toList();
   }
