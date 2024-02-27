@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../domain/entities/command_entity.dart';
 import '../../../domain/entities/shortcut_entity.dart';
 import '../../../domain/use_cases/parse_string_to_commands_use_case.dart';
 import '../../../domain/use_cases/parse_string_to_environment_variables_use_case.dart';
@@ -84,7 +85,7 @@ class UpdateShortcutBloc
     try {
       _shortcut = _shortcut.copyWith(
         name: event.name,
-        commands: _parseStringToCommandsUseCase(event.commands ?? ''),
+        commands: event.commands?.split('\n').expand((e) => _parseStringToCommandsUseCase(e)).toList(),
         workingDirectory: event.workingDirectory ?? _shortcut.workingDirectory,
         environment: event.environment != '' || event.environment != null
             ? _parseStringToEnvironmentVariablesUseCase(event.environment ?? '')

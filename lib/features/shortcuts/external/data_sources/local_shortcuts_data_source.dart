@@ -12,7 +12,6 @@ class LocalShortcutsDataSourceImpl implements LocalShortcutsDataSource {
 
   @override
   Future<ShortcutEntity> createShortcut(ShortcutEntity shortcut) async {
-
     if (_boxShortcut.isEmpty) {
       shortcut = shortcut.copyWith(id: 1);
     } else {
@@ -26,10 +25,11 @@ class LocalShortcutsDataSourceImpl implements LocalShortcutsDataSource {
 
   @override
   Future<ShortcutEntity> updateShortcut(ShortcutEntity shortcut) async {
-    final index = _boxShortcut.values.toList().indexWhere((element) => element.id == shortcut.id);
+    final index = _boxShortcut.values
+        .toList()
+        .indexWhere((element) => element.id == shortcut.id);
 
-    await _boxShortcut.deleteAt(index);
-    await _boxShortcut.add(shortcut);
+    await _boxShortcut.putAt(index, shortcut);
 
     return shortcut;
   }

@@ -13,10 +13,12 @@ class ParseStringToCommandsUseCase {
       });
     }
 
-    return commandsAndArguments.entries.map((x) => CommandEntity(
-      id: -1,
-      command: x.key,
-      arguments: x.value,
-    )).toList();
+    return commandsAndArguments.entries
+        .map((x) => CommandEntity(
+              id: -1,
+              command: x.key,
+              arguments: x.value,
+            ))
+        .toList();
   }
 }

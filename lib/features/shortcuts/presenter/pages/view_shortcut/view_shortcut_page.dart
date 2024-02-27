@@ -60,7 +60,7 @@ class _ViewShortcutPageState extends State<ViewShortcutPage> {
                 ),
                 const Divider(),
                 if (state is HasShortcut)
-                  Text.rich(
+                  SelectableText.rich(
                     TextSpan(
                       text: 'Output: \n',
                       style: const TextStyle(
